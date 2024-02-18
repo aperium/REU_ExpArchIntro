@@ -1,0 +1,150 @@
+---
+title: "REU Experimental Archaeology Introduction Instructions"
+author: Daniel R. Williams
+date: 8 July 2018
+output: 
+  html_notebook: 
+    fig_caption: yes
+    toc: yes
+---
+
+# 1. Install R and R Studio
+
+## Windows users:
+
+1. Open and run the file called `R-3.6.0-win.exe`.
+2. Open and run the file called `RStudio-1.2.1335.exe`.
+3. Open RStudio.
+4. Open this file (or `Instructions.Rmd` if you haven't already).
+5. Run this code to install packages:
+
+```{r windows-binaries, eval=FALSE}
+# find the path directory and the package files to install
+package_dir <- normalizePath(".\\Windows\\packages")
+file_names <- dir(".\\Windows\\packages", pattern = "[zip]$")
+file_paths <- paste(package_dir,file_names,sep = "\\")
+
+# install the packages
+install.packages(file_paths, repos = NULL, type = "binary", verbose = TRUE)
+```
+
+## Mac users:
+
+1. Open and run the file called `R-3.6.0.pkg`.
+2. Open the file called `RStudio-1.2.1335.dmg`.
+3. Drag the application to your Applications folder.
+4. Open RStudio.
+5. Open this file (or `Instructions.Rmd` if you haven't already).
+6. Install packages:
+
+To install packages we are going to run the following block of code. Click the green triangle in the top right corner of the code block.
+
+```{r mac-binaries, eval=FALSE}
+# find the path directory and the package files to install
+package_dir <- normalizePath("./Mac/packages")
+file_names <- dir("./Mac/packages", pattern = "[tgz]$")
+file_paths <- paste(package_dir,file_names,sep = "/")
+
+# install the packages
+install.packages(file_paths, repos = NULL, type = "binary", verbose = TRUE)
+```
+
+# 2. Load packages
+
+We need to load certian packages to do what we need to do. Run this block of code to load the packages (click the green triangle).
+
+```{r setup}
+#load packages
+library(tidyverse)
+library(magrittr)
+library(ggplot2)
+library(knitr)
+library(purrr)
+library(stringr)
+```
+
+# 3. Read data from file
+
+This code will read the data files and store them as variables. We will use these variables to access the data next. Run this block of code.
+
+```{r read_data}
+# get the path directory
+data_dir <- normalizePath(".")
+
+# read files and save data to variables
+garden <- read_csv(paste0(data_dir,"/","garden.csv"))
+rope <- read_csv(paste0(data_dir,"/","rope.csv"))
+
+# make some modifications to help interpret the data
+garden %<>% mutate(
+  date = as.Date(date, "%d-%b-%y"),
+  taxon = as_factor(taxon),
+  `sub-taxon` = as_factor(`sub-taxon`),
+  observer = as_factor(observer),
+  density = as_factor(if_else(distance >= median(distance), "high", "low"))
+  )
+rope %<>% mutate(
+  observer = as_factor(observer),
+  material = as_factor(material),
+  `time/mass` = time_to_make / processed_mass,
+  heft = dry_mass / processed_length,
+  s_invest = time_to_make / (heft * processed_length),
+  s_strength = break_weight / heft
+  )
+
+```
+
+# 4. Make hypotheses
+
+Before we start analyzing the data, we need testable hypotheses. Write down our hypotheses.
+
+**Garden Plants**
+
+ - H~0~: 
+ - H~1~: 
+
+**Rope Manufacturing**
+
+ - H~0~: 
+ - H~1~: 
+
+# 5. Visualize the data
+
+```{r visualize}
+# plot of the garden data
+ggplot(garden, aes(x = distance, y = height, color = distance)) +
+  geom_jitter() +
+  facet_wrap(~taxon) +
+  theme_minimal()
+
+# plot of the fiber manufacturing data
+ggplot(rope, aes(x = s_invest, y = s_strength, color = material, fill = material)) +
+  geom_jitter() +
+  geom_smooth(data = rope %>% filter(material == "yucca"), method = "lm") +
+  geom_smooth(data = rope %>% filter(material == "dogbane"), method = "lm") +
+  theme_minimal()
+
+
+
+
+```
+
+
+# 6. Test the hypotheses
+
+```{r test}
+t.test(height ~ density, data = garden %>% filter(taxon == "Zea mays", observer != "Chloe"))
+
+t.test(height ~ density, data = garden %>% filter(taxon == "H. annua"))
+
+t.test(`time/mass` ~ material, data = rope)
+
+lm(s_strength~s_invest*material, data = rope) %>%
+  anova()
+
+```
+
+
+# 7. Conclusions and Discussion
+
+*This is your chance to tell me what ideas you have. Did you learn anyting? Did any part of the study raise new questions? What would you have done differently to get better data or to answer a different question?*

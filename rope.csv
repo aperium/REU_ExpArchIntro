@@ -1,0 +1,13 @@
+observer,initial_mass,processed_mass,initial_length,processed_length,time_to_make,material,dry_mass,test_length,break_weight
+Caleb,3.9,0.7,69,30,38.55,dogbane,0.5,17,15.978
+Claire,4.3,0.9,86.5,42,45.00,dogbane,0.5,17,14.978
+Chloe,9.1,1.5,106,50,60.50,dogbane,1.9,40,21.978
+David,3.9,0.7,85,32,52.30,dogbane,0.5,20,7.978
+Zoe,3.8,1.4,92,40,33.00,dogbane,0.9,25,6.978
+Claire,17.6,5.8,70,27.5,60.52,yucca,3.2,12,37.967
+Danielle,19.5,6.8,76,31,51.35,yucca,2.5,15,33.967
+Kirsten,21.2,6.7,77,17,68.13,yucca,5.1,14,42.967
+Megan,17.6,6.4,74.5,18,73.20,yucca,3.1,15,43.967
+Patricia,12.8,3.6,60.5,21,92.67,yucca,1.8,11.5,21.978
+Zoe,17.8,5.6,75,12,84.60,yucca,2.2,13,39.967
+Catherine,,,,,,dogbane,0.7,24.5,15.989
